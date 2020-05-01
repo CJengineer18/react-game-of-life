@@ -9,4 +9,12 @@
             padding-right: 1rem;
         }
     }
+
+    & button {
+        padding: 0 8px !important;
+
+        &:not(:last-child) {
+            margin-right: 1rem;
+        }
+    }
 }

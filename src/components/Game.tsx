@@ -23,6 +23,7 @@ export default class Game extends React.Component<GameProps, GameState> {
         this.changeCellState = this.changeCellState.bind(this);
         this.newGeneration = this.newGeneration.bind(this);
         this.asyncUpdateBoard = this.asyncUpdateBoard.bind(this);
+        this.clearBoard = this.clearBoard.bind(this);
 
         this.nCellSide = Math.round(this.board / this.cell);
         this.state = {
@@ -38,11 +39,12 @@ export default class Game extends React.Component<GameProps, GameState> {
 
     render() {
         return (
-            <div>
+            <div className="game">
                 <div className="control">
                     <p>Generation: {this.state.currentGeneration}</p>
                     <p>Population: {this.state.world.currentPopulation}</p>
                     <button onClick={() => this.newGeneration()}>Step</button>
+                    <button onClick={() => this.clearBoard()}>Clear</button>
                 </div>
                 <Board
                     boardSize={this.board}
@@ -181,5 +183,15 @@ export default class Game extends React.Component<GameProps, GameState> {
         });
 
         return population;
+    }
+
+    clearBoard() {
+        this.setState({
+            currentGeneration: 1,
+            world: {
+                currentBoard: new Toroid(this.zeroes()),
+                currentPopulation: 0,
+            },
+        });
     }
 }
