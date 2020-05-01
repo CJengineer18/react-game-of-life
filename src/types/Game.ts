@@ -12,6 +12,7 @@ export type GameProps = {
 
 export type GameState = {
     currentGeneration: number;
+    grid: boolean;
     world: WorldState;
 };
 

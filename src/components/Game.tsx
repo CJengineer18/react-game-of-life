@@ -24,10 +24,12 @@ export default class Game extends React.Component<GameProps, GameState> {
         this.newGeneration = this.newGeneration.bind(this);
         this.asyncUpdateBoard = this.asyncUpdateBoard.bind(this);
         this.clearBoard = this.clearBoard.bind(this);
+        this.showGrid = this.showGrid.bind(this);
 
         this.nCellSide = Math.round(this.board / this.cell);
         this.state = {
             currentGeneration: 1,
+            grid: true,
             world: {
                 currentBoard: new Toroid(this.zeroes()),
                 currentPopulation: 0,
@@ -45,12 +47,21 @@ export default class Game extends React.Component<GameProps, GameState> {
                     <p>Population: {this.state.world.currentPopulation}</p>
                     <button onClick={() => this.newGeneration()}>Step</button>
                     <button onClick={() => this.clearBoard()}>Clear</button>
+                    <p>
+                        <input
+                            type="checkbox"
+                            onClick={() => this.showGrid()}
+                            checked={this.state.grid}
+                        />{" "}
+                        Grid
+                    </p>
                 </div>
                 <Board
                     boardSize={this.board}
                     cellSize={this.cell}
                     boardMatrix={this.state.world.currentBoard.getMatrix()}
                     cellListener={this.changeCellState}
+                    visibleGrid={this.state.grid}
                 />
             </div>
         );
@@ -192,6 +203,12 @@ export default class Game extends React.Component<GameProps, GameState> {
                 currentBoard: new Toroid(this.zeroes()),
                 currentPopulation: 0,
             },
+        });
+    }
+
+    showGrid() {
+        this.setState({
+            grid: !this.state.grid,
         });
     }
 }

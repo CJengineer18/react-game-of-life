@@ -19,10 +19,13 @@ export default class Board extends React.Component<BoardProps, BoardState> {
         const size = this.props.boardSize;
         const wCells = Math.round(size / this.props.cellSize);
         const hCells = Math.round(size / this.props.cellSize);
+        const cSize = this.props.visibleGrid
+            ? this.props.cellSize - 2
+            : this.props.cellSize;
 
         return (
             <div className="board" style={{ width: size, height: size }}>
-                {this.printCells(wCells, hCells, this.props.cellSize)}
+                {this.printCells(wCells, hCells, cSize)}
             </div>
         );
     }
@@ -44,6 +47,7 @@ export default class Board extends React.Component<BoardProps, BoardState> {
                         className={[
                             "boardCell",
                             matrix[i][j] ? "alive" : "dead",
+                            this.props.visibleGrid ? "grid" : "",
                         ].join(" ")}
                         onClick={this.props.cellListener}
                     />
