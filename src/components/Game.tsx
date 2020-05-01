@@ -58,7 +58,6 @@ export default class Game extends React.Component<GameProps, GameState> {
 
     async newGeneration() {
         const newBoard = await this.asyncUpdateBoard();
-        // const newPopulation = await this.asyncCountPopulation();
 
         this.setState({
             currentGeneration: this.state.currentGeneration + 1,
@@ -111,6 +110,8 @@ export default class Game extends React.Component<GameProps, GameState> {
                     (neighborhood < 2 || neighborhood > 3)
                 ) {
                     newBoardState[i][j] = 0;
+                } else {
+                    newBoardState[i][j] = currentState[i][j];
                 }
             }
         }
