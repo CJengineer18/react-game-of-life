@@ -3,4 +3,19 @@
  * Styles for ../components/Board.tsx
  */
 
-/* stylesheet begins here */
+.board {
+    padding-bottom: 1rem;
+    margin: auto;
+
+    .boardCell {
+        float: left;
+
+        &.alive {
+            background-color: white;
+        }
+
+        &.dead {
+            background-color: black;
+        }
+    }
+}

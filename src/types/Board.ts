@@ -4,8 +4,11 @@
  */
 
 export type BoardProps = {
-    className?: string,
-    children?: React.ReactChild | JSX.Element[]
-}
+    className?: string;
+    children?: React.ReactChild | JSX.Element[];
+    cellSize: number;
+    boardSize: number;
+    boardMatrix: number[][];
+};
 
-export type BoardState = {}
+export type BoardState = {};

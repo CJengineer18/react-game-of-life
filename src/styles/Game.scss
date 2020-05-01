@@ -1,0 +1,12 @@
+.control {
+    display: table;
+    margin: auto;
+
+    & * {
+        display: table-cell;
+
+        &:not(:last-child) {
+            padding-right: 1rem;
+        }
+    }
+}

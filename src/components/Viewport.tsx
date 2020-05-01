@@ -3,8 +3,10 @@
  * Types: ../types/Viewport.ts
  */
 
-import React from 'react';
-import { ViewportProps, ViewportState } from '../types/Viewport';
+import React from "react";
+import { ViewportProps, ViewportState } from "../types/Viewport";
+import Game from "./Game";
+import '../styles/Viewport.css';
 
 export default class Viewport extends React.Component<ViewportProps, ViewportState> {
 
@@ -14,7 +16,11 @@ export default class Viewport extends React.Component<ViewportProps, ViewportSta
     }
 
     render() {
-        return <div></div>;
+        return (
+            <div className='viewport'>
+                <p>sjkajsjas9a</p>
+                <Game />
+            </div>
+        );
     }
-
 }
