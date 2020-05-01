@@ -9,6 +9,7 @@ export type BoardProps = {
     cellSize: number;
     boardSize: number;
     boardMatrix: number[][];
+    cellListener: (event: React.MouseEvent) => void;
 };
 
 export type BoardState = {};

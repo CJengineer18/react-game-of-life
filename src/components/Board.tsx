@@ -45,6 +45,7 @@ export default class Board extends React.Component<BoardProps, BoardState> {
                             "boardCell",
                             matrix[i][j] ? "alive" : "dead",
                         ].join(" ")}
+                        onClick={this.props.cellListener}
                     />
                 );
             }

@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { GameProps, GameState } from "../types/Game";
+import { GameProps, GameState, WorldState } from "../types/Game";
 import Board from "./Board";
 import Toroid from "../util/Toroid";
 import "../styles/Game.scss";
@@ -20,11 +20,17 @@ export default class Game extends React.Component<GameProps, GameState> {
         this.zeroes = this.zeroes.bind(this);
         this.updateBoard = this.updateBoard.bind(this);
         this.getNeighborhoodState = this.getNeighborhoodState.bind(this);
+        this.changeCellState = this.changeCellState.bind(this);
+        this.newGeneration = this.newGeneration.bind(this);
+        this.asyncUpdateBoard = this.asyncUpdateBoard.bind(this);
 
         this.nCellSide = Math.round(this.board / this.cell);
         this.state = {
-            currentBoard: new Toroid(this.zeroes()),
             currentGeneration: 1,
+            world: {
+                currentBoard: new Toroid(this.zeroes()),
+                currentPopulation: 0,
+            },
         };
     }
 
@@ -35,25 +41,30 @@ export default class Game extends React.Component<GameProps, GameState> {
             <div>
                 <div className="control">
                     <p>Generation: {this.state.currentGeneration}</p>
-                    <button>Pause</button>
+                    <p>Population: {this.state.world.currentPopulation}</p>
+                    <button onClick={() => this.newGeneration()}>Step</button>
                 </div>
                 <Board
                     boardSize={this.board}
                     cellSize={this.cell}
-                    boardMatrix={this.state.currentBoard.getMatrix()}
+                    boardMatrix={this.state.world.currentBoard.getMatrix()}
+                    cellListener={this.changeCellState}
                 />
             </div>
         );
     }
 
-    componentDidMount() {
+    // Class functions
+
+    async newGeneration() {
+        const newBoard = await this.asyncUpdateBoard();
+        // const newPopulation = await this.asyncCountPopulation();
+
         this.setState({
             currentGeneration: this.state.currentGeneration + 1,
-            currentBoard: this.updateBoard(),
+            world: newBoard,
         });
     }
-
-    // Class functions
 
     zeroes() {
         const arr: number[][] = [];
@@ -73,17 +84,23 @@ export default class Game extends React.Component<GameProps, GameState> {
         return arr;
     }
 
+    asyncUpdateBoard() {
+        return new Promise<WorldState>((resolve, reject) => {
+            resolve(this.updateBoard());
+        });
+    }
+
     updateBoard() {
         const size = this.nCellSide;
-        const newBoardState: number[][] = [];
-        const currentState = this.state.currentBoard.getMatrix();
+        const newBoardState: number[][] = this.zeroes();
+        const currentState = this.state.world.currentBoard.getMatrix();
 
         let i; // x
         let j; // y
         let neighborhood;
+        let population;
 
         for (i = 0; i < size; i++) {
-            newBoardState[i] = [];
             for (j = 0; j < size; j++) {
                 neighborhood = this.getNeighborhoodState(i, j);
 
@@ -98,7 +115,12 @@ export default class Game extends React.Component<GameProps, GameState> {
             }
         }
 
-        return new Toroid(newBoardState);
+        population = this.countPopulation(newBoardState);
+
+        return {
+            currentBoard: new Toroid(newBoardState),
+            currentPopulation: population,
+        };
     }
 
     getNeighborhoodState(x: number, y: number) {
@@ -118,11 +140,45 @@ export default class Game extends React.Component<GameProps, GameState> {
                 idxY = (y + move[j]) % size;
 
                 if (move[i] !== 0 || move[j] !== 0) {
-                    sum += this.state.currentBoard.getValue(idxX, idxY);
+                    sum += this.state.world.currentBoard.getValue(idxX, idxY);
                 }
             }
         }
 
         return sum;
+    }
+
+    changeCellState(ev: React.MouseEvent) {
+        const id = (ev.target as HTMLElement).id;
+        const coords = id.split("-").map((n) => {
+            return parseInt(n);
+        });
+        const board = this.state.world.currentBoard;
+        const alive = !!board.getValue(coords[0], coords[1]);
+
+        board.setValue(coords[0], coords[1], alive ? 0 : 1);
+
+        this.setState({
+            world: {
+                currentBoard: board,
+                currentPopulation: alive
+                    ? this.state.world.currentPopulation - 1
+                    : this.state.world.currentPopulation + 1,
+            },
+        });
+    }
+
+    countPopulation(board: number[][]) {
+        let population = 0;
+
+        board.forEach((row) => {
+            row.forEach((n) => {
+                if (n) {
+                    population++;
+                }
+            });
+        });
+
+        return population;
     }
 }

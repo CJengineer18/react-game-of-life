@@ -11,6 +11,11 @@ export type GameProps = {
 };
 
 export type GameState = {
-    currentBoard: Toroid;
     currentGeneration: number;
+    world: WorldState;
+};
+
+export type WorldState = {
+    currentBoard: Toroid;
+    currentPopulation: number;
 };
