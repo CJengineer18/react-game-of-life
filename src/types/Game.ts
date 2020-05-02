@@ -3,7 +3,7 @@
  * Types for ../pages/Game.tsx
  */
 
-import Toroid from "../util/Toroid";
+import World from "../maps/World";
 
 export type GameProps = {
     className?: string;
@@ -17,6 +17,7 @@ export type GameState = {
 };
 
 export type WorldState = {
-    currentBoard: Toroid;
+    currentBoard: World;
     currentPopulation: number;
+    type: string;
 };

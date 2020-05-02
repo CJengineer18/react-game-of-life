@@ -46,7 +46,7 @@ export default class Board extends React.Component<BoardProps, BoardState> {
                         style={{ width: size, height: size }}
                         className={[
                             "boardCell",
-                            matrix[i][j] ? "alive" : "dead",
+                            matrix.getValue(i, j) ? "alive" : "dead",
                             this.props.visibleGrid ? "grid" : "",
                         ].join(" ")}
                         onClick={this.props.cellListener}

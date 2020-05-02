@@ -6,8 +6,10 @@
 import React from "react";
 import { GameProps, GameState, WorldState } from "../types/Game";
 import Board from "./Board";
-import Toroid from "../util/Toroid";
-import "../styles/Game.scss";
+import World from "../maps/World";
+import Closed2D from "../maps/worlds/Closed2D";
+import Toroid from "../maps/worlds/Toroid";
+import ControlPanel from "./ControlPanel";
 
 export default class Game extends React.Component<GameProps, GameState> {
     private board = 1000;
@@ -17,14 +19,10 @@ export default class Game extends React.Component<GameProps, GameState> {
     constructor(props: GameProps) {
         super(props);
 
-        this.zeroes = this.zeroes.bind(this);
-        this.updateBoard = this.updateBoard.bind(this);
-        this.getNeighborhoodState = this.getNeighborhoodState.bind(this);
         this.changeCellState = this.changeCellState.bind(this);
-        this.newGeneration = this.newGeneration.bind(this);
-        this.asyncUpdateBoard = this.asyncUpdateBoard.bind(this);
         this.clearBoard = this.clearBoard.bind(this);
         this.showGrid = this.showGrid.bind(this);
+        this.changeMapType = this.changeMapType.bind(this);
 
         this.nCellSide = Math.round(this.board / this.cell);
         this.state = {
@@ -33,6 +31,7 @@ export default class Game extends React.Component<GameProps, GameState> {
             world: {
                 currentBoard: new Toroid(this.zeroes()),
                 currentPopulation: 0,
+                type: "Toroid",
             },
         };
     }
@@ -40,26 +39,24 @@ export default class Game extends React.Component<GameProps, GameState> {
     // React functions
 
     render() {
+        const maps = ["Toroid", "Closed2D"];
+
         return (
             <div className="game">
-                <div className="control">
-                    <p>Generation: {this.state.currentGeneration}</p>
-                    <p>Population: {this.state.world.currentPopulation}</p>
-                    <button onClick={() => this.newGeneration()}>Step</button>
-                    <button onClick={() => this.clearBoard()}>Clear</button>
-                    <p>
-                        <input
-                            type="checkbox"
-                            onClick={() => this.showGrid()}
-                            checked={this.state.grid}
-                        />{" "}
-                        Grid
-                    </p>
-                </div>
+                <ControlPanel
+                    maps={maps}
+                    world={this.state.world}
+                    grid={this.state.grid}
+                    currentGeneration={this.state.currentGeneration}
+                    stepListener={() => this.newGeneration()}
+                    clearListener={() => this.clearBoard()}
+                    selectListener={this.changeMapType}
+                    checkboxListener={() => this.showGrid()}
+                />
                 <Board
                     boardSize={this.board}
                     cellSize={this.cell}
-                    boardMatrix={this.state.world.currentBoard.getMatrix()}
+                    boardMatrix={this.state.world.currentBoard}
                     cellListener={this.changeCellState}
                     visibleGrid={this.state.grid}
                 />
@@ -105,7 +102,7 @@ export default class Game extends React.Component<GameProps, GameState> {
     updateBoard() {
         const size = this.nCellSide;
         const newBoardState: number[][] = this.zeroes();
-        const currentState = this.state.world.currentBoard.getMatrix();
+        const currentState = this.state.world.currentBoard;
 
         let i; // x
         let j; // y
@@ -116,15 +113,15 @@ export default class Game extends React.Component<GameProps, GameState> {
             for (j = 0; j < size; j++) {
                 neighborhood = this.getNeighborhoodState(i, j);
 
-                if (!currentState[i][j] && neighborhood === 3) {
+                if (!currentState.getValue(i, j) && neighborhood === 3) {
                     newBoardState[i][j] = 1;
                 } else if (
-                    currentState[i][j] &&
+                    currentState.getValue(i, j) &&
                     (neighborhood < 2 || neighborhood > 3)
                 ) {
                     newBoardState[i][j] = 0;
                 } else {
-                    newBoardState[i][j] = currentState[i][j];
+                    newBoardState[i][j] = currentState.getValue(i, j);
                 }
             }
         }
@@ -132,8 +129,9 @@ export default class Game extends React.Component<GameProps, GameState> {
         population = this.countPopulation(newBoardState);
 
         return {
-            currentBoard: new Toroid(newBoardState),
+            currentBoard: this.createNewWorld(newBoardState),
             currentPopulation: population,
+            type: this.state.world.type,
         };
     }
 
@@ -178,6 +176,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                 currentPopulation: alive
                     ? this.state.world.currentPopulation - 1
                     : this.state.world.currentPopulation + 1,
+                type: this.state.world.type,
             },
         });
     }
@@ -197,18 +196,56 @@ export default class Game extends React.Component<GameProps, GameState> {
     }
 
     clearBoard() {
+        debugger;
         this.setState({
             currentGeneration: 1,
             world: {
-                currentBoard: new Toroid(this.zeroes()),
+                currentBoard: this.createNewWorld(this.zeroes()),
                 currentPopulation: 0,
+                type: this.state.world.type,
             },
         });
     }
 
     showGrid() {
+        debugger;
         this.setState({
             grid: !this.state.grid,
+        });
+    }
+
+    createNewWorld(matrix: number[][], mapType?: string) {
+        const map = mapType || this.state.world.type;
+
+        let newWorld: World;
+
+        switch (map) {
+            case "Closed2D":
+                newWorld = new Closed2D(matrix);
+                break;
+            case "Toroid":
+                newWorld = new Toroid(matrix);
+                break;
+            default:
+                newWorld = this.state.world.currentBoard;
+                break;
+        }
+
+        return newWorld;
+    }
+
+    changeMapType(ev: React.ChangeEvent) {
+        debugger;
+        const newMap = (ev.target as HTMLSelectElement).selectedOptions[0]
+            .value;
+        const currentMapState = this.state.world.currentBoard.getMatrix();
+
+        this.setState({
+            world: {
+                currentBoard: this.createNewWorld(currentMapState, newMap),
+                currentPopulation: this.countPopulation(currentMapState),
+                type: newMap,
+            },
         });
     }
 }
