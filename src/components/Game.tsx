@@ -1,6 +1,8 @@
 /*
  * Game.tsx
  * Types: ../types/Game.ts
+ *
+ * The game itself. Contains the rules and the events required for the execution.
  */
 
 import React from "react";
@@ -66,6 +68,9 @@ export default class Game extends React.Component<GameProps, GameState> {
 
     // Class functions
 
+    /**
+     * Loads the new generation according to the rules.
+     */
     async newGeneration() {
         const newBoard = await this.asyncUpdateBoard();
 
@@ -75,6 +80,11 @@ export default class Game extends React.Component<GameProps, GameState> {
         });
     }
 
+    /**
+     * Creates a matrix of zeroes.
+     *
+     * @return A matrix of zeroes.
+     */
     zeroes() {
         const arr: number[][] = [];
         const size = this.nCellSide;
@@ -93,12 +103,22 @@ export default class Game extends React.Component<GameProps, GameState> {
         return arr;
     }
 
+    /**
+     * Updates the board asyncronously.
+     *
+     * @returns Promise<WorldState>
+     */
     asyncUpdateBoard() {
         return new Promise<WorldState>((resolve, reject) => {
             resolve(this.updateBoard());
         });
     }
 
+    /**
+     * Executes the rules and update the board with the next generarion.
+     *
+     * @returns WorldState
+     */
     updateBoard() {
         const size = this.nCellSide;
         const newBoardState: number[][] = this.zeroes();
@@ -135,6 +155,14 @@ export default class Game extends React.Component<GameProps, GameState> {
         };
     }
 
+    /**
+     * Get the number of neighbors in a coordinate.
+     *
+     * @param x
+     * @param y
+     *
+     * @returns number
+     */
     getNeighborhoodState(x: number, y: number) {
         const size = this.nCellSide;
         const move = [-1, 0, 1];
@@ -160,6 +188,11 @@ export default class Game extends React.Component<GameProps, GameState> {
         return sum;
     }
 
+    /**
+     * Mouse event. Change the state of a cell.
+     *
+     * @param ev The mouse event
+     */
     changeCellState(ev: React.MouseEvent) {
         const id = (ev.target as HTMLElement).id;
         const coords = id.split("-").map((n) => {
@@ -181,6 +214,11 @@ export default class Game extends React.Component<GameProps, GameState> {
         });
     }
 
+    /**
+     * Counts the total of alive cells in a board.
+     *
+     * @param board
+     */
     countPopulation(board: number[][]) {
         let population = 0;
 
@@ -195,8 +233,10 @@ export default class Game extends React.Component<GameProps, GameState> {
         return population;
     }
 
+    /**
+     * Cleans the board and restart the game.
+     */
     clearBoard() {
-        debugger;
         this.setState({
             currentGeneration: 1,
             world: {
@@ -207,13 +247,24 @@ export default class Game extends React.Component<GameProps, GameState> {
         });
     }
 
+    /**
+     * Shows or hide the grid in the board.
+     */
     showGrid() {
-        debugger;
         this.setState({
             grid: !this.state.grid,
         });
     }
 
+    /**
+     * Update the board with a new world. Each world has it's own rules.
+     *
+     * @param matrix The board
+     * @param mapType (Optional) The new board type. Default to current selected in list.
+     *
+     * @returns World
+     * @see changeMapType
+     */
     createNewWorld(matrix: number[][], mapType?: string) {
         const map = mapType || this.state.world.type;
 
@@ -234,8 +285,12 @@ export default class Game extends React.Component<GameProps, GameState> {
         return newWorld;
     }
 
+    /**
+     * Select listener. Re-creates the game's world with a new map.
+     *
+     * @param ev: The select's ChangeEvent.
+     */
     changeMapType(ev: React.ChangeEvent) {
-        debugger;
         const newMap = (ev.target as HTMLSelectElement).selectedOptions[0]
             .value;
         const currentMapState = this.state.world.currentBoard.getMatrix();

@@ -1,3 +1,6 @@
+/**
+ * Defines the World Map for the game. The map must be a number matrix.
+ */
 export default abstract class World {
     protected matrix: number[][];
 

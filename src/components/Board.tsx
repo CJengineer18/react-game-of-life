@@ -1,6 +1,8 @@
 /*
  * Board.tsx
  * Types: ../types/Board.ts
+ *
+ * The panel where the game plays.
  */
 
 import React from "react";
@@ -30,6 +32,15 @@ export default class Board extends React.Component<BoardProps, BoardState> {
         );
     }
 
+    /**
+     * Creates the cells in the board.
+     *
+     * @param wCells Total cells in x axis.
+     * @param hCells Total cells in y axis.
+     * @param size Size of each cell side in pixels.
+     *
+     * @returns JSX.Element[]
+     */
     printCells(wCells: number, hCells: number, size: number) {
         const cells = [];
         const matrix = this.props.boardMatrix;

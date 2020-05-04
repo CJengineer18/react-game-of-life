@@ -1,6 +1,8 @@
 /*
  * ControlPanel.tsx
  * Types: ../types/ControlPanel.ts
+ * 
+ * Show the available options for the game.
  */
 
 import React from "react";

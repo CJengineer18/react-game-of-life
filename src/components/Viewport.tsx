@@ -18,8 +18,11 @@ export default class Viewport extends React.Component<ViewportProps, ViewportSta
     render() {
         return (
             <div className='viewport'>
-                <p>sjkajsjas9a</p>
+                <p>Conway's Game of Life in React</p>
                 <Game />
+                <p>Developed by Cristian José Jiménez Diazgranados</p>
+                <p>See source <a href='#' target='_blank' rel="noopener noreferrer">Here</a></p>
+                <p>About <a href='#' target='_blank' rel="noopener noreferrer">Game of Life</a></p>
             </div>
         );
     }
