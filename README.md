@@ -12,8 +12,6 @@ An implementation of Game of Life in React. Play it [here](https://cjengineer18.
  - Open 2D World (infinite world)
  - Some optimization
 
-This known issues is registered in the [Issues](https://github.com/CJengineer18/react-game-of-life/issues) page, if you can solve it, feel free of send a PR.
-
-Also if you find new issues, report it in [Issues](https://github.com/CJengineer18/react-game-of-life/issues).
+This known issues is registered in the [Issues](https://github.com/CJengineer18/react-game-of-life/issues) page, if you can solve it, feel free of send a PR. Also if you find new issues o send a suggestion, you can [add it](https://github.com/CJengineer18/react-game-of-life/issues).
 
 License: MIT
