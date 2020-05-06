@@ -4,6 +4,7 @@
  */
 
 import World from "../maps/World";
+import ColorPallete from "../util/ColorPallete";
 
 export type GameProps = {
     className?: string;
@@ -12,6 +13,7 @@ export type GameProps = {
 
 export type GameState = {
     currentGeneration: number;
+    currentPallete: ColorPallete;
     grid: boolean;
     world: WorldState;
 };

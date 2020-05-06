@@ -3,23 +3,55 @@
  * Styles for ../components/Board.tsx
  */
 
+$colorsPallete: (
+    "classic": (
+        "alive": yellow,
+        "dead": darkgray,
+        "grid": silver,
+    ),
+    "high-contrast": (
+        "alive": white,
+        "dead": black,
+        "grid": darkgray,
+    ),
+    "negative-high-contrast": (
+        "alive": black,
+        "dead": white,
+        "grid": silver,
+    ),
+);
+
+@mixin board-colors($className) {
+    &.alive {
+        background-color: map-get(map-get($colorsPallete, $className), "alive");
+    }
+
+    &.dead {
+        background-color: map-get(map-get($colorsPallete, $className), "dead");
+    }
+
+    &.grid {
+        border: 1px solid map-get(map-get($colorsPallete, $className), "grid");
+    }
+}
+
 .board {
     padding-bottom: 1rem;
     margin: auto;
 
-    .boardCell {
+    .board-cell {
         float: left;
 
-        &.grid {
-            border: 1px solid silver;
+        &.classic {
+            @include board-colors("classic");
         }
 
-        &.alive {
-            background-color: white;
+        &.high-contrast {
+            @include board-colors("high-contrast");
         }
 
-        &.dead {
-            background-color: black;
+        &.negative-high-contrast {
+            @include board-colors("negative-high-contrast");
         }
     }
 }

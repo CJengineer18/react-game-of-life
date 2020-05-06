@@ -1,9 +1,19 @@
 .control {
-    display: table;
+    display: flex;
     margin: auto;
 
+    & div {
+        margin: auto;
+        margin-right: 0;
+
+        &:last-child {
+            margin-left: 0;
+            margin-right: auto;
+        }
+    }
+
     & * {
-        display: table-cell;
+        display: inline-block;
 
         &:not(:last-child) {
             padding-right: 1rem;

@@ -4,6 +4,7 @@
  */
 
 import World from "../maps/World";
+import ColorPallete from "../util/ColorPallete";
 
 export type BoardProps = {
     className?: string;
@@ -13,6 +14,7 @@ export type BoardProps = {
     boardMatrix: World;
     cellListener: (event: React.MouseEvent) => void;
     visibleGrid: boolean;
+    pallete: ColorPallete;
 };
 
 export type BoardState = {};

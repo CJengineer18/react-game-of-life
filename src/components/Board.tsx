@@ -44,6 +44,7 @@ export default class Board extends React.Component<BoardProps, BoardState> {
     printCells(wCells: number, hCells: number, size: number) {
         const cells = [];
         const matrix = this.props.boardMatrix;
+        const pallete = this.props.pallete;
 
         let i;
         let j;
@@ -56,7 +57,8 @@ export default class Board extends React.Component<BoardProps, BoardState> {
                         id={`${i}-${j}`}
                         style={{ width: size, height: size }}
                         className={[
-                            "boardCell",
+                            "board-cell",
+                            pallete.getCssClassName(),
                             matrix.getValue(i, j) ? "alive" : "dead",
                             this.props.visibleGrid ? "grid" : "",
                         ].join(" ")}

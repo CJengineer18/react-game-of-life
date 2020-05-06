@@ -4,6 +4,7 @@
  */
 
 import { WorldState } from "./Game";
+import ColorPallete from "../util/ColorPallete";
 
 export type ControlPanelProps = {
     className?: string;
@@ -11,8 +12,11 @@ export type ControlPanelProps = {
     world: WorldState;
     grid: boolean;
     currentGeneration: number;
+    currentPallete: ColorPallete;
     maps: string[];
-    selectListener: (ev: React.ChangeEvent) => void;
+    palletes: ColorPallete[];
+    mapSelectListener: (ev: React.ChangeEvent) => void;
+    colorPalleteSelectListener: (ev: React.ChangeEvent) => void;
     checkboxListener: (ev: React.ChangeEvent) => void;
     stepListener: (ev: React.MouseEvent) => void;
     clearListener: (ev: React.MouseEvent) => void;

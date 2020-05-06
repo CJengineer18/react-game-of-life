@@ -12,11 +12,18 @@ import World from "../maps/World";
 import Closed2D from "../maps/worlds/Closed2D";
 import Toroid from "../maps/worlds/Toroid";
 import ControlPanel from "./ControlPanel";
+import ColorPallete from "../util/ColorPallete";
 
 export default class Game extends React.Component<GameProps, GameState> {
     private board = 1000;
     private cell = 20;
     private nCellSide = 0;
+    private maps = ["Toroid", "Closed2D"];
+    private palletes = [
+        new ColorPallete("Classic", "classic"),
+        new ColorPallete("High Contrast", "high-contrast"),
+        new ColorPallete("Negative High Contrast", "negative-high-contrast"),
+    ];
 
     constructor(props: GameProps) {
         super(props);
@@ -25,6 +32,7 @@ export default class Game extends React.Component<GameProps, GameState> {
         this.clearBoard = this.clearBoard.bind(this);
         this.showGrid = this.showGrid.bind(this);
         this.changeMapType = this.changeMapType.bind(this);
+        this.changeColorPallete = this.changeColorPallete.bind(this);
 
         this.nCellSide = Math.round(this.board / this.cell);
         this.state = {
@@ -33,27 +41,29 @@ export default class Game extends React.Component<GameProps, GameState> {
             world: {
                 currentBoard: new Toroid(this.zeroes()),
                 currentPopulation: 0,
-                type: "Toroid",
+                type: this.maps[0],
             },
+            currentPallete: this.palletes[0],
         };
     }
 
     // React functions
 
     render() {
-        const maps = ["Toroid", "Closed2D"];
-
         return (
             <div className="game">
                 <ControlPanel
-                    maps={maps}
+                    maps={this.maps}
                     world={this.state.world}
                     grid={this.state.grid}
                     currentGeneration={this.state.currentGeneration}
                     stepListener={() => this.newGeneration()}
                     clearListener={() => this.clearBoard()}
-                    selectListener={this.changeMapType}
+                    mapSelectListener={this.changeMapType}
+                    colorPalleteSelectListener={this.changeColorPallete}
                     checkboxListener={() => this.showGrid()}
+                    palletes={this.palletes}
+                    currentPallete={this.state.currentPallete}
                 />
                 <Board
                     boardSize={this.board}
@@ -61,6 +71,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                     boardMatrix={this.state.world.currentBoard}
                     cellListener={this.changeCellState}
                     visibleGrid={this.state.grid}
+                    pallete={this.state.currentPallete}
                 />
             </div>
         );
@@ -288,11 +299,11 @@ export default class Game extends React.Component<GameProps, GameState> {
     /**
      * Select listener. Re-creates the game's world with a new map.
      *
-     * @param ev: The select's ChangeEvent.
+     * @param ev The select's ChangeEvent.
      */
     changeMapType(ev: React.ChangeEvent) {
-        const newMap = (ev.target as HTMLSelectElement).selectedOptions[0]
-            .value;
+        const option = (ev.target as HTMLSelectElement).selectedOptions[0];
+        const newMap = option.value;
         const currentMapState = this.state.world.currentBoard.getMatrix();
 
         this.setState({
@@ -301,6 +312,19 @@ export default class Game extends React.Component<GameProps, GameState> {
                 currentPopulation: this.countPopulation(currentMapState),
                 type: newMap,
             },
+        });
+    }
+
+    /**
+     * Select listener. Changes the board's color pallete.
+     *
+     * @param ev The select's ChangeEvent
+     */
+    changeColorPallete(ev: React.ChangeEvent) {
+        const option = (ev.target as HTMLSelectElement).selectedIndex;
+
+        this.setState({
+            currentPallete: this.palletes[option],
         });
     }
 }
