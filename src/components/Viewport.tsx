@@ -20,9 +20,10 @@ export default class Viewport extends React.Component<ViewportProps, ViewportSta
             <div className='viewport'>
                 <p>Conway's Game of Life in React</p>
                 <Game />
-                <p>Developed by Cristian José Jiménez Diazgranados</p>
-                <p>See source <a href='#' target='_blank' rel="noopener noreferrer">Here</a></p>
-                <p>About <a href='#' target='_blank' rel="noopener noreferrer">Game of Life</a></p>
+                <p>Developed by <a href='https://github.com/CJengineer18' target='_blank' rel="noopener noreferrer">Cristian José Jiménez Diazgranados</a></p>
+                <p>See source code <a href='https://github.com/CJengineer18/react-game-of-life/' target='_blank' rel="noopener noreferrer">here</a></p>
+                <p>About <a href='https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life' target='_blank' rel="noopener noreferrer">Game of Life</a> in Wikipedia</p>
+                <p>License: MIT</p>
             </div>
         );
     }
