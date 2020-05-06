@@ -14,6 +14,8 @@ An implementation of Game of Life in React.
 
 This known issues is registered in the [Issues](https://github.com/CJengineer18/react-game-of-life/issues) page, if you can solve it, feel free of send a PR.
 
+Also if you find new issues, report it in [Issues](https://github.com/CJengineer18/react-game-of-life/issues).
+
 You can see the game [here](https://cjengineer18.github.io/react-game-of-life/).
 
 License: MIT
